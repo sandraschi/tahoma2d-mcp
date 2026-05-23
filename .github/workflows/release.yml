@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: tauri-apps/setup-tauri@v2
+      - run: uv sync
+      - run: npm --prefix webapp ci && npm --prefix webapp run build
+      - run: uv run pip install pyinstaller
+      - run: uv run pyinstaller --onedir --name tahoma2d-mcp-backend
+               --add-data "src/tahoma2d_mcp;tahoma2d_mcp"
+               --copy-metadata fastmcp
+               run_server.py
+      - run: mkdir -p native/binaries
+      - run: mv "dist/tahoma2d-mcp-backend/tahoma2d-mcp-backend.exe"
+             "native/binaries/tahoma2d-mcp-backend-x86_64-pc-windows-msvc.exe"
+      - run: npx tauri build
+        working-directory: native
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: native/target/release/bundle/nsis/*.exe

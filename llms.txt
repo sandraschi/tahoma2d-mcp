@@ -1,0 +1,17 @@
+# tahoma2d-mcp
+
+Context about the Tahoma2D animation software and MCP project for AI assistants.
+
+## What is Tahoma2D?
+- Active open-source fork of OpenToonz (BSD license)
+- Same C++/Qt codebase as Studio Ghibli's Toonz
+- Used for: Princess Mononoke, Spirited Away, Howl's Moving Castle, Futurama, Steven Universe
+- Last release: May 2026 (v1.6.1)
+- Website: https://tahoma2d.org
+- GitHub: https://github.com/tahoma2d/tahoma2d
+
+## tahoma2d-mcp Project
+- FastMCP 3.2 server bridging to Tahoma2D via ECMAScript automation
+- 8 portmanteau MCP tools for animation production
+- Ports: 11012 (frontend), 11013 (backend)
+- Full Tauri 2.0 desktop wrapper available

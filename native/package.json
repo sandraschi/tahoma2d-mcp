@@ -1,0 +1,13 @@
+{
+  "name": "tahoma2d-mcp-native",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:debug": "tauri build --debug"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
