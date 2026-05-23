@@ -1,6 +1,7 @@
 """FastMCP application instance for tahoma2d-mcp."""
 
 import logging
+
 from fastmcp import FastMCP
 
 from . import __version__

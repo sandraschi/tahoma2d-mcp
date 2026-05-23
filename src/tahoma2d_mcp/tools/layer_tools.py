@@ -62,8 +62,8 @@ print(JSON.stringify({{"status":"SUCCESS","layers":layers}}));
                 if not layers:
                     return f"No layers on canvas '{canvas_name}'"
                 lines = [f"Layers on '{canvas_name}' ({len(layers)}):"]
-                for l in layers:
-                    lines.append(f"  {l['name']} (visible: {l['visible']}, frames: {l['frame_count']})")
+                for layer in layers:
+                    lines.append(f"  {layer['name']} (visible: {layer['visible']}, frames: {layer['frame_count']})")
                 return "\n".join(lines)
             return f"ERROR: {result.get('error', 'Failed to list layers')}"
 

@@ -12,4 +12,4 @@ except ImportError:
 
 from pydantic import BaseModel, Field
 
-__all__ = ["BaseModel", "Field", "Context", "PydanticBaseModel"]
+__all__ = ["BaseModel", "Context", "Field", "PydanticBaseModel"]

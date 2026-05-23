@@ -2,10 +2,10 @@
 
 import logging
 
+from .. import __version__
 from ..app import get_app
 from ..bridge.tahoma_executor import get_executor
-from ..config import tahoma2d_available, find_tahoma2d
-from .. import __version__
+from ..config import find_tahoma2d, tahoma2d_available
 
 logger = logging.getLogger(__name__)
 

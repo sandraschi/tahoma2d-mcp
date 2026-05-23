@@ -1,6 +1,6 @@
 """ECMAScript code generation for Tahoma2D automation."""
 
-from typing import Any
+import json
 
 
 def gen_create_project(name: str, width: int, height: int, fps: float) -> str:

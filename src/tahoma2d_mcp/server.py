@@ -2,11 +2,11 @@
 
 import argparse
 import logging
-import sys
+
 import uvicorn
 
 from .app import get_app
-from .config import MCP_HOST, MCP_PORT, MCP_TRANSPORT
+from .config import MCP_HOST, MCP_PORT
 
 logger = logging.getLogger(__name__)
 

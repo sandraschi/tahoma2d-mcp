@@ -6,9 +6,8 @@ import logging
 import os
 import subprocess
 import tempfile
-from pathlib import Path
 
-from ..config import find_tahoma2d, TAHOMA2D_SCRIPT_DIR
+from ..config import find_tahoma2d
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +69,7 @@ class Tahoma2DExecutor:
             except json.JSONDecodeError:
                 return {"status": "SUCCESS", "output": result}
 
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return {"status": "ERROR", "error": "Script execution timed out"}
         except FileNotFoundError:
             return {"status": "ERROR", "error": "Tahoma2D executable not found"}
