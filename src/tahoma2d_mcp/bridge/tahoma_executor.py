@@ -12,7 +12,6 @@ The bridge focuses on what's confirmed working:
 """
 
 import asyncio
-import json
 import logging
 import os
 import subprocess

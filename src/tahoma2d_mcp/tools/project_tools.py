@@ -3,8 +3,8 @@
 import logging
 
 from ..app import get_app
-from ..bridge.tahoma_executor import get_executor
 from ..bridge import ecmascript_gen as gen
+from ..bridge.tahoma_executor import get_executor
 
 logger = logging.getLogger(__name__)
 
