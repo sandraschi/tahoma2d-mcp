@@ -1,7 +1,6 @@
 """FastMCP application instance for tahoma2d-mcp."""
 
 import logging
-
 from fastmcp import FastMCP
 
 from . import __version__
@@ -17,7 +16,6 @@ def get_app() -> FastMCP:
         _app = FastMCP(
             name="tahoma2d-mcp",
             version=__version__,
-            description="Tahoma2D 2D animation production via MCP",
         )
         logger.info("Tahoma2D MCP app created (v%s)", __version__)
     return _app
