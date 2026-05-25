@@ -4,6 +4,7 @@ import logging
 
 from ..app import get_app
 from ..bridge.tahoma_executor import get_executor
+from ..bridge import ecmascript_gen as gen
 
 logger = logging.getLogger(__name__)
 
@@ -15,58 +16,61 @@ def _register_project_tools():
 
     @app.tool
     async def tahoma2d_project(
-        operation: str = "create",
+        operation: str = "status",
         name: str = "Untitled",
+        file_path: str = "",
         width: int = 1920,
         height: int = 1080,
         fps: float = 24.0,
-        file_path: str = "",
     ) -> str:
         """
-        Manage Tahoma2D projects: create, open, save, close.
+        Manage Tahoma2D projects via ToonzScript.
 
         Operations:
-        - create: Create a new project with given dimensions and FPS
-        - open: Open an existing project file
-        - save: Save current project
-        - close: Close current project without saving
-        - list: List recent projects
+        - status: Check if Tahoma2D bridge is alive
+        - open: Load a .tnz scene file via loadScene()
+        - save: Save current scene via saveScene()
+        - create: Create a new project (saves empty scene)
 
         Returns project operation result.
         """
-        if operation == "create":
-            script = f"""
-var project = new Project("{name}", {width}, {height}, {fps});
-project.save();
-print(JSON.stringify({{"status":"SUCCESS","project":"{name}","width":{width},"height":{height},"fps":{fps}}}));
-"""
+        if not _executor.available:
+            return "ERROR: Tahoma2D not installed. Download from https://tahoma2d.org"
+
+        if operation == "status":
+            script = gen.gen_status()
             result = await _executor.execute_script(script)
-            if result.get("status") == "SUCCESS":
-                return f"SUCCESS: Project '{name}' created ({width}x{height}, {fps}fps)"
-            return f"ERROR: {result.get('error', 'Project creation failed')}"
+            if "T2D_STATUS:OK" in str(result):
+                return "SUCCESS: Tahoma2D bridge is alive"
+            return f"Bridge status: {result}"
 
         elif operation == "open":
             if not file_path:
-                return "ERROR: file_path required for open operation"
-            script = f"""
-var project = Project.open("{file_path}");
-print(JSON.stringify({{"status":"SUCCESS","project":project.getName()}}));
-"""
+                return "ERROR: file_path required"
+            script = gen.gen_load_scene(file_path)
             result = await _executor.execute_script(script)
-            if result.get("status") == "SUCCESS":
-                return f"SUCCESS: Opened project '{result.get('project', file_path)}'"
-            return f"ERROR: {result.get('error', 'Failed to open project')}"
+            out = str(result)
+            if "T2D_SCENE_LOADED" in out:
+                return f"SUCCESS: Scene loaded from '{file_path}'"
+            return f"ERROR: {result.get('error', out)}"
 
         elif operation == "save":
-            script = """
-var scene = Scene.getCurrentScene();
-scene.save();
-print(JSON.stringify({"status":"SUCCESS","saved":true}));
-"""
+            path = file_path or f"D:\\Dev\\repos\\tahoma2d-mcp\\data\\{name}.tnz"
+            script = gen.gen_save_scene(path)
             result = await _executor.execute_script(script)
-            if result.get("status") == "SUCCESS":
-                return "SUCCESS: Project saved"
-            return f"ERROR: {result.get('error', 'Save failed')}"
+            out = str(result)
+            if "T2D_SCENE_SAVED" in out:
+                return f"SUCCESS: Scene saved to '{path}'"
+            return f"ERROR: {result.get('error', out)}"
+
+        elif operation == "create":
+            path = f"D:\\Dev\\repos\\tahoma2d-mcp\\data\\{name}.tnz"
+            script = gen.gen_save_scene(path)
+            result = await _executor.execute_script(script)
+            out = str(result)
+            if "T2D_SCENE_SAVED" in out:
+                return f"SUCCESS: Project '{name}' created and saved"
+            return f"ERROR: {result.get('error', out)}"
 
         else:
             return f"Unknown operation: {operation}"

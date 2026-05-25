@@ -37,7 +37,7 @@ if (-not $FrontendOnly) {
     $ready = $false
     for ($i = 0; $i -lt 30; $i++) {
         try {
-            $req = [System.Net.HttpWebRequest]::Create("http://127.0.0.1:$BackendPort/mcp/api/v1/health")
+            $req = [System.Net.HttpWebRequest]::Create("http://127.0.0.1:$BackendPort/api/status")
             $req.Timeout = 1000
             $resp = $req.GetResponse()
             if ($resp.StatusCode -eq 200) { $ready = $true; break }

@@ -45,7 +45,24 @@ export default function Render() {
               className="w-full px-3 py-2 bg-secondary rounded-lg text-sm border border-border" />
           </div>
         </div>
-        <button disabled={loading} onClick={() => run({ operation: "render", output_path: outputPath, start_frame: startFrame, end_frame: endFrame })}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground">FPS</label>
+            <input type="number" value={fps} onChange={(e) => setFps(Number(e.target.value))} min={1} max={120}
+              className="w-full px-3 py-2 bg-secondary rounded-lg text-sm border border-border" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground">Resolution X</label>
+            <input type="number" value={resolutionX} onChange={(e) => setResolutionX(Number(e.target.value))} min={1}
+              className="w-full px-3 py-2 bg-secondary rounded-lg text-sm border border-border" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs text-muted-foreground">Resolution Y</label>
+            <input type="number" value={resolutionY} onChange={(e) => setResolutionY(Number(e.target.value))} min={1}
+              className="w-full px-3 py-2 bg-secondary rounded-lg text-sm border border-border" />
+          </div>
+        </div>
+        <button disabled={loading} onClick={() => run({ operation: "render", output_path: outputPath, start_frame: startFrame, end_frame: endFrame, resolution_x: resolutionX, resolution_y: resolutionY, fps })}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium disabled:opacity-50">
           Render
         </button>

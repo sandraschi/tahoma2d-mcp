@@ -1,52 +1,49 @@
-# tahoma2d-mcp — Tahoma2D Animation MCP Server
+# tahoma2d-mcp
 
-**FastMCP 3.2** — Unified Gateway: MCP (stdio/HTTP) + REST + Vite dashboard + Tauri 2.0 desktop.
-
-> 2D animation production via Tahoma2D (active OpenToonz fork). BSD-licensed, Ghibli-pedigree, last release May 2026.
-> 8 portmanteau tools: project, canvas, layer, draw, animation, effects, render, status.
-
-## Quick Start
+**2D animation production server** — MCP tools + Vite dashboard for Tahoma2D (active OpenToonz fork).
 
 ```bash
-uv sync
-.\start.ps1
+uv sync && .\start.ps1
 # Opens http://localhost:11012
 ```
 
-## Claude Desktop Config
+## Table of Contents
 
-```json
-{
-  "mcpServers": {
-    "tahoma2d": {
-      "command": "uv",
-      "args": ["--directory", "D:/Dev/repos/tahoma2d-mcp", "run", "tahoma2d-mcp-server"]
-    }
-  }
-}
-```
+- [Installation & Setup](docs/README_INSTALL.md)
+- [API Reference](docs/README_API.md)
+- [Webapp Dashboard Guide](docs/README_DASHBOARD.md)
+- [Tauri Native Desktop](docs/README_TAURI.md)
+- [Contributing](docs/README_CONTRIBUTING.md)
+
+## Quick Start
+
+1. **Install Tahoma2D** from [tahoma2d.org](https://tahoma2d.org) (portable zip or installer)
+2. **`uv sync`** — install Python deps
+3. **`.\start.ps1`** — launches backend on :11013 + frontend on :11012
+
+If Tahoma2D isn't auto-detected, set the path in Settings → Tahoma2D Executable.
 
 ## Tools
 
 | Tool | Description |
 |------|-------------|
-| `tahoma2d_project` | Create, open, save projects |
-| `tahoma2d_canvas` | Create, list canvases |
-| `tahoma2d_layer` | Create, list layers |
-| `tahoma2d_draw` | Draw strokes, shapes, fill |
-| `tahoma2d_animation` | Keyframes, FPS, timeline |
-| `tahoma2d_effects` | Blur, glow, shadow, tint |
-| `tahoma2d_render` | Render, export video/SVG |
-| `tahoma2d_status` | Server health |
+| `tahoma2d_project` | Create, open, save .tnz projects |
+| `tahoma2d_canvas` | Create, list, resize canvases |
+| `tahoma2d_layer` | Create, list, delete, visibility, opacity |
+| `tahoma2d_draw` | Strokes, boxes, circles, lines, fills |
+| `tahoma2d_animation` | Keyframes, FPS, frame range |
+| `tahoma2d_effects` | Blur, glow, shadow, tint, color curve, levels, noise |
+| `tahoma2d_render` | Render frames, export MP4/GIF/MOV/SVG |
+| `tahoma2d_status` | Server health, Tahoma2D availability |
 
 ## Ports
 
-| Port | Role |
-|------|------|
+| Port | Service |
+|------|---------|
 | 11012 | Vite frontend |
-| 11013 | FastAPI + FastMCP HTTP |
+| 11013 | Backend (REST + MCP HTTP) |
 
-## justfile targets
+## justfile
 
 | Target | Purpose |
 |--------|---------|
@@ -56,19 +53,6 @@ uv sync
 | `build-sidecar` | PyInstaller EXE |
 | `build-native` / `build-all` | Tauri release |
 
-## Fleet Integration
-
-```
-Fleet generators → tahoma2d-mcp (compositor) → resolveops (final edit)
-Cross-refs: blender-mcp (Grease Pencil), freecad-mcp (CAD), godot-mcp (game)
-```
-
 ## License
 
-MIT — Free for personal and commercial use.
-
-## See Also
-
-- [tahoma2d.org](https://tahoma2d.org) — active OpenToonz fork
-- [WEBAPP_PORTS.md](../../operations/WEBAPP_PORTS.md)
-- [FLEET_INDEX.md](../FLEET_INDEX.md)
+MIT — free for personal and commercial use.
