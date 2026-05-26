@@ -1,4 +1,4 @@
-"""System status and help tools for tahoma2d-mcp."""
+"""System tools for tahoma2d-mcp."""
 
 import logging
 
@@ -16,47 +16,50 @@ def _register_system_tools():
     app = get_app()
 
     @app.tool
-    async def tahoma2d_status(operation: str = "status", format: str = "text") -> str:
+    async def tahoma2d_status(
+        operation: str = "status",
+        format: str = "text",
+    ) -> str:
         """
-        Check Tahoma2D MCP server and Tahoma2D application availability.
+        Check Tahoma2D MCP server and renderer availability.
 
         Operations:
-        - status: Server health, Tahoma2D availability, version info
-        - help: Display available tools and operations
+        - status: Server health, tcomposer availability, version info
+        - help: List available tools
 
-        Returns status information as text.
+        Returns status or help text.
         """
         if operation == "help":
             return (
                 "tahoma2d-mcp v" + __version__ + "\n"
-                "Tools: tahoma2d_project, tahoma2d_canvas, tahoma2d_layer,\n"
-                "tahoma2d_draw, tahoma2d_animation, tahoma2d_effects,\n"
-                "tahoma2d_render, tahoma2d_status\n"
-                "Run tahoma2d_status(operation='help') for details.\n"
-                "See docs/ or project pages for full reference."
+                "Tools:\n"
+                "  tahoma2d_status   - Server health, tcomposer check\n"
+                "  tahoma2d_project  - .tnz scene file management\n"
+                "  tahoma2d_render   - Headless rendering via tcomposer.exe\n"
+                "  tahoma2d_export   - Convert frames to video via ffmpeg\n"
+                "See docs/TOOL_REFERENCE.md for details."
             )
 
-        tahoma_ok = tahoma2d_available()
-        tahoma_path = find_tahoma2d()
+        tcomposer_path = _executor.tcomposer_path
+        tcomposer_ver = await _executor.tcomposer_version() if tcomposer_path else "N/A"
 
         info = {
             "status": "running",
             "version": __version__,
-            "tahoma2d_available": tahoma_ok,
-            "tahoma2d_path": tahoma_path,
-            "bridge_connected": _executor.available,
+            "tahoma2d_installed": tahoma2d_available(),
+            "tahoma2d_path": find_tahoma2d(),
+            "tcomposer_path": tcomposer_path,
+            "tcomposer_version": tcomposer_ver,
         }
 
         if format == "json":
             return f"STATUS: {info}"
 
         lines = [
-            f"Tahoma2D MCP Server v{__version__}",
-            f"Tahoma2D installed: {'Yes' if tahoma_ok else 'No'}",
-            f"Tahoma2D path: {tahoma_path or 'Not found'}",
-            f"Bridge connected: {_executor.available}",
-            "",
-            "System ready." if tahoma_ok else "Install Tahoma2D from https://tahoma2d.org to use 2D animation tools.",
+            f"Tahoma2D MCP v{__version__}",
+            f"Tahoma2D: {'Yes' if tahoma2d_available() else 'No'} at {find_tahoma2d() or 'N/A'}",
+            f"tcomposer: {'Yes' if tcomposer_path else 'No'}",
+            f"tcomposer version: {tcomposer_ver}",
         ]
         return "\n".join(lines)
 

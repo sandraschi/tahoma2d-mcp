@@ -1,6 +1,8 @@
-"""Render and export tools for tahoma2d-mcp."""
+"""Render tools for tahoma2d-mcp — tcomposer.exe bridge."""
 
 import logging
+import os
+from pathlib import Path
 
 from ..app import get_app
 from ..bridge.tahoma_executor import get_executor
@@ -16,50 +18,53 @@ def _register_render_tools():
     @app.tool
     async def tahoma2d_render(
         operation: str = "render",
+        scene_path: str = "",
         output_path: str = "",
         start_frame: int = 1,
         end_frame: int = 100,
+        step: int = 1,
         format: str = "png",
-        fps: float = 24.0,
-        resolution_x: int = 1920,
-        resolution_y: int = 1080,
     ) -> str:
         """
-        Render and export Tahoma2D projects.
+        Render .tnz scenes headlessly via tcomposer.exe.
 
         Operations:
-        - render: Render frame range to image sequence
-        - export: Export to video format (MP4, GIF, MOV)
-        - export_svg: Export to SVG
-        - status: Check render status
+        - render: Render a .tnz scene frame range to images
+        - check: Verify tcomposer is available
 
-        Returns render/export operation result.
+        Requires a pre-existing .tnz scene file (create/edit via Tahoma2D GUI,
+        then render here).
+
+        Returns render result or availability check.
         """
-        if operation == "render":
-            if not output_path:
-                output_path = f"render_{start_frame}_{end_frame}"
-            script = f"""
-var scene = Scene.getCurrentScene();
-scene.render("{output_path}", {start_frame}, {end_frame});
-print(JSON.stringify({{"status":"SUCCESS","output":"{output_path}","start":{start_frame},"end":{end_frame}}}));
-"""
-            result = await _executor.execute_script(script)
-            if result.get("status") == "SUCCESS":
-                return f"SUCCESS: Rendered frames {start_frame}-{end_frame} to '{output_path}'"
-            return f"ERROR: {result.get('error', 'Render failed')}"
+        if operation == "check":
+            if _executor.tcomposer_path:
+                ver = await _executor.tcomposer_version()
+                return f"tcomposer ready: {_executor.tcomposer_path}\nVersion: {ver}"
+            return "ERROR: tcomposer.exe not found. Install Tahoma2D from https://tahoma2d.org"
 
-        elif operation == "export":
+        if operation == "render":
+            if not scene_path:
+                return "ERROR: scene_path required (.tnz file)"
+            if not os.path.isfile(scene_path):
+                return f"ERROR: Scene file not found: {scene_path}"
+
             if not output_path:
-                return "ERROR: output_path required for export"
-            script = f"""
-var scene = Scene.getCurrentScene();
-scene.Export("{output_path}", "{format}", {resolution_x}, {resolution_y}, {fps});
-print(JSON.stringify({{"status":"SUCCESS","output":"{output_path}","format":"{format}"}}));
-"""
-            result = await _executor.execute_script(script)
+                out_dir = Path(scene_path).parent / "renders"
+                out_dir.mkdir(exist_ok=True)
+                output_path = str(out_dir / f"{Path(scene_path).stem}_{start_frame}-{end_frame}.{format}")
+
+            result = await _executor.render_scene(
+                scene_path=scene_path,
+                output_path=output_path,
+                start_frame=start_frame,
+                end_frame=end_frame,
+                step=step,
+            )
+
             if result.get("status") == "SUCCESS":
-                return f"SUCCESS: Exported to '{output_path}' ({format})"
-            return f"ERROR: {result.get('error', 'Export failed')}"
+                return f"Rendered {start_frame}-{end_frame} to {output_path}"
+            return f"Render failed: {result.get('error', 'unknown error')}"
 
         else:
             return f"Unknown operation: {operation}"

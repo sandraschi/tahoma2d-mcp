@@ -1,71 +1,34 @@
-# Tahoma2D MCP — Tool Reference
+# tahoma2d-mcp — Tool Reference
 
-## Portmanteau Tools
-
-### `tahoma2d_project`
-Project lifecycle: create, open, save, close.
+## `tahooma2d_status`
+Server health and tcomposer availability.
 
 | Operation | Params | Description |
 |-----------|--------|-------------|
-| `create` | name, width, height, fps | Create new animation project |
-| `open` | file_path | Open existing .tnz project |
-| `save` | — | Save current project |
+| `status` | format | Server + tcomposer status |
+| `help` | — | Tool listing |
 
-### `tahoma2d_canvas`
-Canvas management: create, list.
-
-| Operation | Params | Description |
-|-----------|--------|-------------|
-| `create` | name, width, height | Create canvas |
-| `list` | — | List all canvases |
-
-### `tahoma2d_layer`
-Layer management: create, list, delete, set properties.
+## `tahooma2d_project`
+Scene file management for .tnz files.
 
 | Operation | Params | Description |
 |-----------|--------|-------------|
-| `create` | canvas_name, layer_name | Create layer |
-| `list` | canvas_name | List layers |
+| `list` | directory | Find .tnz files |
+| `info` | file_path | Scene metadata |
+| `open` | file_path | Open in Tahoma2D GUI |
 
-### `tahoma2d_draw`
-Drawing and painting operations.
-
-| Operation | Params | Description |
-|-----------|--------|-------------|
-| `draw_stroke` | canvas, layer, points, color, thickness | Freehand/line stroke |
-| `draw_box` | canvas, layer, width, height, color, thickness | Rectangle |
-| `draw_circle` | canvas, layer, radius, color, thickness | Ellipse |
-| `fill_region` | canvas, layer, color | Color fill |
-
-### `tahoma2d_animation`
-Animation controls: keyframes, timeline.
+## `tahooma2d_render`
+Headless rendering via tcomposer.exe.
 
 | Operation | Params | Description |
 |-----------|--------|-------------|
-| `set_keyframe` | canvas, layer, frame | Insert keyframe |
-| `clear_keyframe` | canvas, layer, frame | Remove keyframe |
-| `set_fps` | fps | Set project frame rate |
+| `render` | scene_path, start_frame, end_frame, step, output_path | Render frame range |
+| `check` | — | Verify tcomposer |
 
-### `tahoma2d_effects`
-Visual effects: blur, glow, shadow, tint, etc.
-
-| Operation | Params | Description |
-|-----------|--------|-------------|
-| `apply` | canvas, layer, effect_type, intensity | Apply effect |
-| `list` | — | Available effects |
-
-### `tahoma2d_render`
-Render and export.
+## `tahooma2d_export`
+Frame-to-video conversion via ffmpeg.
 
 | Operation | Params | Description |
 |-----------|--------|-------------|
-| `render` | output_path, start, end | Render frame sequence |
-| `export` | output_path, format | Export to MP4/GIF/MOV/SVG |
-
-### `tahoma2d_status`
-Server and Tahoma2D health.
-
-| Operation | Params | Description |
-|-----------|--------|-------------|
-| `status` | format | Server + Tahoma2D status |
-| `help` | — | Tool reference |
+| `to_video` | input_pattern, output_path, fps, codec | Convert frames to MP4 |
+| `check_ffmpeg` | — | Verify ffmpeg in PATH |

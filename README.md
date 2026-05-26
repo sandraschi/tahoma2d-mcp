@@ -1,58 +1,72 @@
-# tahoma2d-mcp
+# tahoma2d-mcp — Tahoma2D Render Engine
 
-**2D animation production server** — MCP tools + Vite dashboard for Tahoma2D (active OpenToonz fork).
+**FastMCP 3.2** — Headless .tnz scene rendering via tcomposer.exe + ffmpeg export.
 
-```bash
-uv sync && .\start.ps1
-# Opens http://localhost:11012
-```
-
-## Table of Contents
-
-- [Installation & Setup](docs/README_INSTALL.md)
-- [API Reference](docs/README_API.md)
-- [Webapp Dashboard Guide](docs/README_DASHBOARD.md)
-- [Tauri Native Desktop](docs/README_TAURI.md)
-- [Contributing](docs/README_CONTRIBUTING.md)
+> Pivot: Not a 2D animation compositor (ToonzScript not available in this build).
+> Instead: a render orchestrator. Create .tnz scenes in the Tahoma2D GUI,
+> render them headlessly via tcomposer, export frames to video via ffmpeg.
 
 ## Quick Start
 
-1. **Install Tahoma2D** from [tahoma2d.org](https://tahoma2d.org) (portable zip or installer)
-2. **`uv sync`** — install Python deps
-3. **`.\start.ps1`** — launches backend on :11013 + frontend on :11012
-
-If Tahoma2D isn't auto-detected, set the path in Settings → Tahoma2D Executable.
+```bash
+uv sync
+.\start.ps1
+# Opens http://localhost:11012
+```
 
 ## Tools
 
 | Tool | Description |
 |------|-------------|
-| `tahoma2d_project` | Create, open, save .tnz projects |
-| `tahoma2d_canvas` | Create, list, resize canvases |
-| `tahoma2d_layer` | Create, list, delete, visibility, opacity |
-| `tahoma2d_draw` | Strokes, boxes, circles, lines, fills |
-| `tahoma2d_animation` | Keyframes, FPS, frame range |
-| `tahoma2d_effects` | Blur, glow, shadow, tint, color curve, levels, noise |
-| `tahoma2d_render` | Render frames, export MP4/GIF/MOV/SVG |
-| `tahoma2d_status` | Server health, Tahoma2D availability |
+| `tahooma2d_status` | Server + tcomposer health check |
+| `tahooma2d_project` | List, inspect, open .tnz scene files |
+| `tahooma2d_render` | Headless rendering via tcomposer.exe |
+| `tahooma2d_export` | Convert frame sequences to video (ffmpeg) |
 
 ## Ports
 
-| Port | Service |
-|------|---------|
+| Port | Role |
+|------|------|
 | 11012 | Vite frontend |
-| 11013 | Backend (REST + MCP HTTP) |
+| 11013 | FastAPI + FastMCP HTTP |
 
-## justfile
+## Workflow
+
+```
+1. Create/edit .tnz scene in Tahoma2D GUI
+2. tahoma2d_render(scene_path="scene.tnz", start=1, end=100)
+3. tahoma2d_export(input_pattern="render_%04d.png", output="out.mp4")
+```
+
+## Claude Desktop Config
+
+```json
+{
+  "mcpServers": {
+    "tahoma2d": {
+      "command": "uv",
+      "args": ["--directory", "D:/Dev/repos/tahoma2d-mcp", "run", "tahooma2d-mcp-server"]
+    }
+  }
+}
+```
+
+## justfile targets
 
 | Target | Purpose |
 |--------|---------|
-| `lint` / `fix` | Ruff lint + format |
-| `test` / `e2e` | pytest + Playwright |
+| `lint` / `fix` | Ruff |
+| `test` | pytest |
 | `serve` / `web` / `start` | Run server / frontend / both |
-| `build-sidecar` | PyInstaller EXE |
-| `build-native` / `build-all` | Tauri release |
 
-## License
+## Fleet Role
 
-MIT — free for personal and commercial use.
+```
+blender-mcp GP (create 2D) → .tnz → tahoma2d-mcp (render frames) → resolveops (final edit)
+```
+
+## See Also
+
+- [tahoma2d.org](https://tahoma2d.org)
+- [WEBAPP_PORTS.md](../../operations/WEBAPP_PORTS.md)
+- [FLEET_INDEX.md](../FLEET_INDEX.md)
