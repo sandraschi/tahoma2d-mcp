@@ -1,41 +1,56 @@
-# tahoma2d-mcp — Tahoma2D Render Engine
+# tahoma2d-mcp
 
-**FastMCP 3.2** — Headless .tnz scene rendering via tcomposer.exe + ffmpeg export.
+**Headless .tnz scene renderer** via tcomposer.exe + ffmpeg export.
 
-> Pivot: Not a 2D animation compositor (ToonzScript not available in this build).
-> Instead: a render orchestrator. Create .tnz scenes in the Tahoma2D GUI,
-> render them headlessly via tcomposer, export frames to video via ffmpeg.
+NOT a 2D animation compositor. ToonzScript (ECMAScript automation) is **not available**
+in the Tahoma2D 1.6.1 build that ships. You cannot create or edit scenes programmatically
+through this server. You create scenes in the Tahoma2D GUI, then render here.
+
+## What This Actually Does
+
+| Tool | What it does | Limitation |
+|------|-------------|------------|
+| `tahooma2d_status` | Checks tcomposer is installed | — |
+| `tahooma2d_project` | Lists .tnz files on disk | Read-only. Cannot create or edit scenes. |
+| `tahooma2d_render` | Launches tcomposer.exe to render .tnz frame range | Requires a pre-existing .tnz file |
+| `tahooma2d_export` | Converts rendered frames to MP4 via ffmpeg | Requires ffmpeg in PATH |
+
+## What This Is NOT
+
+This is NOT a 2D animation compositor, a replacement for Blender Grease Pencil,
+a scriptable animation pipeline, or something that can create or edit scenes.
+
+This IS a headless batch renderer for existing .tnz scenes.
+
+## Why
+
+Tahoma2D 1.6.1 ships with Qt5Script.dll but the `.toonzscript` automation path
+was either compiled out or changed between source and binary. The only confirmed
+headless operations are:
+
+- `tcomposer.exe scene.tnz -o output.png -range 1 24` ✅ working
+- `tcomposer.exe -version` ✅ working
+
+## Workflow
+
+```
+1. Create/edit .tnz scenes in Tahoma2D GUI
+2. tahoma2d_render(scene_path="scene.tnz", start=1, end=100)
+3. tahoma2d_export(input_pattern="frame_%04d.png", output="out.mp4")
+```
+
+## Requirements
+
+- Tahoma2D 1.6+ installed ([tahooma2d.org](https://tahooma2d.org))
+- ffmpeg in PATH (for export tool)
+- Python 3.12+
+- Node.js 20+ (for webapp dev)
 
 ## Quick Start
 
 ```bash
 uv sync
 .\start.ps1
-# Opens http://localhost:11012
-```
-
-## Tools
-
-| Tool | Description |
-|------|-------------|
-| `tahooma2d_status` | Server + tcomposer health check |
-| `tahooma2d_project` | List, inspect, open .tnz scene files |
-| `tahooma2d_render` | Headless rendering via tcomposer.exe |
-| `tahooma2d_export` | Convert frame sequences to video (ffmpeg) |
-
-## Ports
-
-| Port | Role |
-|------|------|
-| 11012 | Vite frontend |
-| 11013 | FastAPI + FastMCP HTTP |
-
-## Workflow
-
-```
-1. Create/edit .tnz scene in Tahoma2D GUI
-2. tahoma2d_render(scene_path="scene.tnz", start=1, end=100)
-3. tahoma2d_export(input_pattern="render_%04d.png", output="out.mp4")
 ```
 
 ## Claude Desktop Config
@@ -45,28 +60,25 @@ uv sync
   "mcpServers": {
     "tahoma2d": {
       "command": "uv",
-      "args": ["--directory", "D:/Dev/repos/tahoma2d-mcp", "run", "tahooma2d-mcp-server"]
+      "args": ["--directory", "D:/Dev/repos/tahooma2d-mcp", "run", "tahooma2d-mcp-server"]
     }
   }
 }
 ```
 
-## justfile targets
+## Ports
 
-| Target | Purpose |
-|--------|---------|
-| `lint` / `fix` | Ruff |
-| `test` | pytest |
-| `serve` / `web` / `start` | Run server / frontend / both |
+| Port | Role |
+|------|------|
+| 11012 | Vite frontend |
+| 11013 | FastAPI + FastMCP HTTP |
 
 ## Fleet Role
 
 ```
-blender-mcp GP (create 2D) → .tnz → tahoma2d-mcp (render frames) → resolveops (final edit)
+blender-mcp GP (create 2D) -> .tnz -> tahoma2d-mcp (render frames) -> resolveops (final edit)
 ```
 
-## See Also
+## License
 
-- [tahoma2d.org](https://tahoma2d.org)
-- [WEBAPP_PORTS.md](../../operations/WEBAPP_PORTS.md)
-- [FLEET_INDEX.md](../FLEET_INDEX.md)
+MIT
