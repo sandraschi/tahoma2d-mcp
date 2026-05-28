@@ -18,3 +18,5 @@ uv sync
 - `just web` — start frontend
 - `just start` — full stack
 - `just test` — pytest
+
+Install docs: follow mcp-central-docs/standards/AGENT_INSTALL_REFERENCE.md
