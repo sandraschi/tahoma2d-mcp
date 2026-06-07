@@ -19,6 +19,8 @@ $FleetStart = Initialize-FleetStartMode @PSBoundParameters
 Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 Stop-FleetPortSquatters -Ports @($WebPort, $BackendPort) -Label "tahoma2d-mcp"
 
+if (-not (Assert-FleetPortsAvailable -Ports @($WebPort, $BackendPort) -Label "tahoma2d-mcp")) { exit 1 }
+
 if (-not $FrontendOnly) {
     Write-Host "Starting backend (port $BackendPort)..." -ForegroundColor Green
     $backendCmd = "Set-Location '$RepoRoot'; uv run --project '$RepoRoot' uvicorn tahoma2d_mcp.server:asgi_app --host 127.0.0.1 --port $BackendPort --log-level info"
@@ -66,4 +68,5 @@ Write-Host "Backend: http://localhost:$BackendPort/mcp"
 Write-Host "Webapp:  http://localhost:$WebPort"
 Set-Location $WebRoot
 npm run dev -- --port $WebPort --host --strictPort
+
 
