@@ -1,52 +1,47 @@
 # Architecture
 
+## Components
+
 ```
-┌─────────────────────────────────────────────────────┐
-│                 tahoma2d-mcp                         │
-│                                                      │
-│  ┌────────────┐    ┌──────────────────────────────┐  │
-│  │ FastMCP 3.2 │    │  FastAPI REST (optional)     │  │
-│  │  /mcp       │    │  /api/health, /api/status    │  │
-│  └─────┬───────┘    └──────────────────────────────┘  │
-│        │                                              │
-│  ┌─────▼──────────────────────────────────────────┐   │
-│  │  Tools Layer                                   │   │
-│  │  project │ canvas │ layer │ draw │ animation   │   │
-│  │  effects │ render │ system                      │   │
-│  └─────┬──────────────────────────────────────────┘   │
-│        │                                              │
-│  ┌─────▼──────────────────────────────────────────┐   │
-│  │  Bridge Layer (Tahoma2D Executor)               │   │
-│  │  ECMAScript automation scripts → Tahoma2D CLI   │   │
-│  │  or TCP bridge to running Tahoma2D GUI          │   │
+┌─────────────────────────────────────────────────────────┐
+│  tahoma2d-mcp                                           │
+│                                                         │
+│  FastMCP 3.2 (/mcp)  +  FastAPI (health, config API)   │
+│         │                                               │
+│  ┌──────▼──────────────────────────────────────────┐   │
+│  │  Tools: status │ project │ render │ export      │   │
+│  └──────┬──────────────────────────────────────────┘   │
+│         │                                               │
+│  ┌──────▼──────────────────────────────────────────┐   │
+│  │  Tahoma2DExecutor                               │   │
+│  │  • tcomposer.exe  — headless .tnz render        │   │
+│  │  • Tahoma2D.exe   — open GUI (project.open)     │   │
+│  │  • ffmpeg         — export only (external)      │   │
 │  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────┘
 
-┌────────────────┐     ┌──────────────┐
-│  React Webapp  │────▶│  Vite Proxy  │
-│  (port 11012)  │     │  /mcp → 11013│
-└────────────────┘     └──────┬───────┘
-                              │
-┌─────────────────────────────▼───────┐
-│  Tauri 2.0 Native Wrapper            │
-│  (optional: bundles everything)       │
-│  Sidecar: PyInstaller .exe           │
-└─────────────────────────────────────┘
+React webapp (:11012) ──proxy──▶ backend (:11013)
 ```
 
-## Bridge Modes
+## Heritage
 
-1. **Subprocess** — Launch Tahoma2D in script mode, execute .js, capture JSON
-2. **Bridge** — (future) TCP to running Tahoma2D GUI for real-time operations
+Tahoma2D → OpenToonz (2016 OSS) → Ghibli-customized Toonz → commercial Toonz (Digital Video). The `.tnz` format and `tcomposer` renderer come from this stack. See [TAHOMA2D_GUIDE.md](TAHOMA2D_GUIDE.md#lineage-toonz--ghibli--opentoonz--tahoma2d).
 
-## Fleet Integration
+## What Tahoma2D provides
 
+| Binary | Role |
+|--------|------|
+| `Tahoma2D.exe` | Full 2D animation editor (authoring) |
+| `tcomposer.exe` | Headless scene renderer (batch frames) |
+
+ToonzScript / `.toonzscript` automation is **not** used in this MCP — it is unavailable in the 1.6.1 builds tested.
+
+## Fleet integration
+
+```text
+Authoring:  Tahoma2D GUI (human or imported assets)
+Batch:      tahoma2d-mcp → PNG/TGA sequence
+Finish:     ffmpeg / davinci-resolve-mcp
 ```
-Fleet generators (wan-video, veogen, worldlabs, blender-mcp GP)
-        │
-        ▼
-   tahoma2d-mcp (compositor, ink/paint, render)
-        │
-        ▼
-   resolveops (final edit, color grade) → output
-```
+
+Optional Tauri native wrapper bundles the Python backend (see `docs/README_TAURI.md`).

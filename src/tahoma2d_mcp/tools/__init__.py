@@ -1,4 +1,5 @@
 """Tool discovery for tahoma2d-mcp."""
+
 import logging
 import pkgutil
 from pathlib import Path

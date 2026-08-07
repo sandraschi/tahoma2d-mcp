@@ -1,4 +1,5 @@
 """Pytest configuration for tahoma2d-mcp."""
+
 import pytest
 
 

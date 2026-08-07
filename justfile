@@ -1,3 +1,7 @@
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
+
+import 'scripts/just/fleet.just'
+
 default:
     just --list
 
@@ -63,3 +67,5 @@ e2e:
 
 clean:
     Remove-Item -Recurse -Force dist, build, .pytest_cache, __pycache__ -ErrorAction SilentlyContinue
+
+# Bootstrap: install dev deps + pre-commit hook

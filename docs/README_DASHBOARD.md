@@ -1,26 +1,28 @@
-# Webapp Dashboard Guide
+# Webapp dashboard
 
-The webapp runs on **port 11012** and provides a graphical interface for all Tahoma2D MCP tools.
+The webapp runs on **port 11012** and proxies MCP calls to the backend on **11013**.
+
+## What you are looking at
+
+**Tahoma2D** is a free 2D animation desktop app ([tahoma2d.org](https://tahoma2d.org)).  
+**This dashboard** is only the **batch render/export** side — it does not replace the Tahoma2D editor.
 
 ## Pages
 
 | Page | Path | Purpose |
 |------|------|---------|
-| Dashboard | `/` | Server status, project overview |
-| Canvas | `/canvas` | Create and manage canvases |
-| Layers | `/layers` | Add, delete, configure layers |
-| Draw | `/draw` | Draw strokes, shapes, fills |
-| Animation | `/animation` | Keyframes and timeline |
-| Effects | `/effects` | Apply visual effects |
-| Compositor | `/compositor` | Multi-layer compositing |
-| Render | `/render` | Render frame sequences |
-| Export | `/export` | Export to video/GIF/SVG |
-| AI Assistant | `/chat` | MCP tool chat interface |
-| Settings | `/settings` | Tahoma2D path, server config |
-| Help | `/help` | Full documentation |
+| Dashboard | `/` | What Tahoma2D is, server status, workflow overview |
+| Render | `/render` | Headless `tcomposer` frame render |
+| Export | `/export` | ffmpeg frame sequence → video |
+| Projects | `/projects` | List / open `.tnz` scene files |
+| Settings | `/settings` | Tahoma2D install path, connectivity |
+| Help | `/help` | Full “what is this?” + MCP tool reference |
+
+Full Tahoma2D install and GUI walkthrough: [TAHOMA2D_GUIDE.md](TAHOMA2D_GUIDE.md) or webapp **Help** (`/help`).
 
 ## Troubleshooting
 
-- **Tahoma2D not found**: Go to Settings, set the correct path to Tahoma2D.exe
-- **Backend unreachable**: Run `start.ps1`, check port 11013 is listening
-- **Frontend blank**: Check the browser console for errors, verify Vite proxy config
+- **Tahoma2D not found** — Settings → set folder containing `Tahoma2D.exe` and `tcomposer.exe`
+- **Backend unreachable** — Run `.\start.ps1`; confirm port 11013
+- **Render errors** — Open the scene in the GUI first; verify frame range and write permissions on output dir
+- **Export errors** — Install ffmpeg and add it to PATH

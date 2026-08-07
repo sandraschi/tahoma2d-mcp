@@ -1,34 +1,41 @@
 # -*- mode: python ; coding: utf-8 -*-
-import sys
-from pathlib import Path
+from PyInstaller.utils.hooks import copy_metadata
 
-sys.path.insert(0, "src")
+datas = [('src/tahoma2d_mcp', 'tahoma2d_mcp')]
+datas += copy_metadata('fastmcp')
+
 
 a = Analysis(
-    ["run_server.py"],
+    ['run_server.py'],
     pathex=[],
+    
     binaries=[],
-    datas=[("src/tahoma2d_mcp", "tahoma2d_mcp")],
-    hiddenimports=["uvicorn.logging", "uvicorn.loops.auto", "uvicorn.protocols.http.auto"],
-    hookspath=[],
+    
+    datas=datas,
+    hiddenimports=['uvicorn.logging',
+    "_strptime",
+],
+hookspath=[],
+    
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    noarchive=False,
+    noarchive=True,
+    optimize=0,
 )
-
 pyz = PYZ(a.pure)
 
 exe = EXE(
     pyz,
     a.scripts,
     [],
+    
     exclude_binaries=True,
-    name="tahoma2d-mcp-backend",
+    name='tahoma2d-mcp-backend',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
+    upx=False,
     console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
@@ -36,13 +43,21 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
-
 coll = COLLECT(
     exe,
     a.binaries,
     a.datas,
     strip=False,
-    upx=True,
+    upx=False,
     upx_exclude=[],
-    name="tahoma2d-mcp-backend",
+    
+    name='tahoma2d-mcp-backend',
 )
+
+
+
+
+
+
+
+

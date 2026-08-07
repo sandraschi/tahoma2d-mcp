@@ -60,11 +60,17 @@ class Tahoma2DExecutor:
         logger.info("Render: %s [%d-%d] -> %s", scene_path, start_frame, end_frame, output_path)
         try:
             proc = await asyncio.create_subprocess_exec(
-                self.tcomposer_path, scene_path,
-                "-o", output_path,
-                "-range", str(start_frame), str(end_frame),
-                "-step", str(step),
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                self.tcomposer_path,
+                scene_path,
+                "-o",
+                output_path,
+                "-range",
+                str(start_frame),
+                str(end_frame),
+                "-step",
+                str(step),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
             stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
             out = stdout.decode("utf-8", errors="replace").strip()
@@ -82,7 +88,7 @@ class Tahoma2DExecutor:
         if not self.tcomposer_path:
             return "not found"
         try:
-            r = subprocess.run([self.tcomposer_path, "-version"], capture_output=True, text=True, timeout=10)  # noqa: S603
+            r = subprocess.run([self.tcomposer_path, "-version"], capture_output=True, text=True, timeout=10)
             return (r.stdout or r.stderr).strip()
         except Exception:
             return "unknown"
@@ -94,12 +100,14 @@ class Tahoma2DExecutor:
             return []
         scenes = []
         for f in sorted(p.glob("*.tnz")):
-            scenes.append({
-                "name": f.stem,
-                "path": str(f),
-                "size": f.stat().st_size,
-                "modified": f.stat().st_mtime,
-            })
+            scenes.append(
+                {
+                    "name": f.stem,
+                    "path": str(f),
+                    "size": f.stat().st_size,
+                    "modified": f.stat().st_mtime,
+                }
+            )
         return scenes
 
     def get_scene_info(self, scene_path: str) -> dict:

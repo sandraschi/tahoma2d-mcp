@@ -9,6 +9,7 @@
   },
   "app": {
     "windows": [{
+      "label": "main",
       "title": "Tahoma2D MCP",
       "width": 1100,
       "height": 750,
@@ -21,7 +22,14 @@
     "active": true,
     "targets": "all",
     "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-    "externalBin": ["binaries/{name}-backend"]
+    "externalBin": ["binaries/tahoma2d-mcp-backend"],
+    "windows": {
+      "webviewInstallMode": { "type": "skip" },
+      "nsis": {
+        "installMode": "currentUser",
+        "installerHooks": "./windows/hooks.nsh",
+}
+    }
   },
   "plugins": {
     "shell": { "open": true },
@@ -29,3 +37,4 @@
     "process": { "all": true }
   }
 }
+

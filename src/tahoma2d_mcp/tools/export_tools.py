@@ -48,15 +48,22 @@ def _register_export_tools():
             vcodec = "libx264" if codec == "h264" else "libx265" if codec == "h265" else codec
             import asyncio
             import subprocess
+
             try:
                 proc = await asyncio.create_subprocess_exec(
-                    ffmpeg, "-y",
-                    "-framerate", str(fps),
-                    "-i", input_pattern,
-                    "-c:v", vcodec,
-                    "-pix_fmt", "yuv420p",
+                    ffmpeg,
+                    "-y",
+                    "-framerate",
+                    str(fps),
+                    "-i",
+                    input_pattern,
+                    "-c:v",
+                    vcodec,
+                    "-pix_fmt",
+                    "yuv420p",
                     output_path,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                 )
                 _, stderr = await asyncio.wait_for(proc.communicate(), timeout=300)
                 if proc.returncode != 0:

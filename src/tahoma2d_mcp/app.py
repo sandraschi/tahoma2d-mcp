@@ -20,5 +20,6 @@ def get_app() -> FastMCP:
         )
         # Import tools package to register all @tool-decorated functions
         import tahoma2d_mcp.tools  # noqa: F401
+
         logger.info("Tahoma2D MCP app created (v%s)", __version__)
     return _app

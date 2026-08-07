@@ -4,16 +4,19 @@ import {
   FileImage,
   FolderOpen,
   LayoutDashboard,
+  List,
   Pen,
   Settings,
 } from "lucide-react";
 import { Link, Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
+import Logs from "./pages/logs";
 import Render from "./pages/render";
 import Export from "./pages/export";
 import Projects from "./pages/projects";
 import SettingsPage from "./pages/settings";
 import Help from "./pages/help";
+import FloatingChat from "./components/FloatingChat";
 
 function NavItem({ to, icon: Icon, label }: { to: string; icon: React.ElementType; label: string }) {
   const loc = useLocation();
@@ -37,7 +40,7 @@ function Layout() {
           <div className="w-8 h-8 rounded bg-primary flex items-center justify-center">
             <Pen className="w-5 h-5 text-primary-foreground" />
           </div>
-          <h1 className="font-bold text-xl tracking-tight">T2D Render</h1>
+          <h1 className="font-bold text-xl tracking-tight">Tahoma2D</h1>
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <NavItem to="/" icon={LayoutDashboard} label="Dashboard" />
@@ -45,6 +48,7 @@ function Layout() {
           <NavItem to="/export" icon={FileImage} label="Export" />
           <NavItem to="/projects" icon={FolderOpen} label="Projects" />
           <NavItem to="/settings" icon={Settings} label="Settings" />
+          <NavItem to="/logs" icon={List} label="Logs" />
           <NavItem to="/help" icon={Activity} label="Help" />
         </nav>
         <div className="p-4 border-t border-border bg-muted/20">
@@ -58,7 +62,7 @@ function Layout() {
 
       <div className="flex-1 flex flex-col overflow-hidden bg-background">
         <header className="h-16 border-b border-border flex items-center px-6 bg-card/50 backdrop-blur">
-          <h2 className="text-lg font-semibold">Tahoma2D Render Engine</h2>
+          <h2 className="text-lg font-semibold">Batch render — not the animation editor</h2>
         </header>
         <main className="flex-1 overflow-y-auto">
           <Routes>
@@ -67,10 +71,12 @@ function Layout() {
             <Route path="/export" element={<Export />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/logs" element={<Logs />} />
             <Route path="/help" element={<Help />} />
           </Routes>
         </main>
       </div>
+      <FloatingChat />
     </div>
   );
 }
