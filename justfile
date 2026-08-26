@@ -45,7 +45,7 @@ build-sidecar:
     powershell -File native/build-sidecar.ps1
 
 build-native:
-    Set-Location native; npx @tauri-apps/cli build
+    Set-Location native; pwsh -NoProfile -File '{{justfile_directory()}}\native\build.ps1'
 
 build-native-debug:
     Set-Location native; npx @tauri-apps/cli build --debug
