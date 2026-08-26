@@ -13,6 +13,11 @@ def main() -> None:
     parser.add_argument("--stdio", action="store_true", help="Run in stdio mode (default)")
     args = parser.parse_args()
 
+    import os as _os
+    if _os.getenv("TAHOMA2D_TAURI") == "1":
+        args.http = True
+        args.port = int(_os.getenv("MCP_PORT", args.port))
+
     logging.basicConfig(
         level=getattr(logging, args.log_level.upper(), logging.INFO),
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
