@@ -21,7 +21,7 @@ serve:
     uv run tahoma2d-mcp-server
 
 web:
-    cd webapp && npm run dev -- --port 11012 --host
+    cd webapp; npm run dev -- --port 11012 --host
 
 start:
     powershell -File start.ps1
@@ -63,7 +63,7 @@ audit-deps:
     uv run safety check
 
 e2e:
-    cd webapp && npx playwright test
+    cd webapp; npx playwright test
 
 clean:
     Remove-Item -Recurse -Force dist, build, .pytest_cache, __pycache__ -ErrorAction SilentlyContinue
