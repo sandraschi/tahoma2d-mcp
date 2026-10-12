@@ -88,7 +88,7 @@ class Tahoma2DExecutor:
         if not self.tcomposer_path:
             return "not found"
         try:
-            r = subprocess.run([self.tcomposer_path, "-version"], capture_output=True, text=True, timeout=10)
+            r = await asyncio.to_thread(subprocess.run, [self.tcomposer_path, "-version"], capture_output=True, text=True, timeout=10)
             return (r.stdout or r.stderr).strip()
         except Exception:
             return "unknown"
