@@ -1,0 +1,14 @@
+{
+  "product_name": "Tahoma2D MCP",
+  "install_dir": "%LOCALAPPDATA%\\Tahoma2D MCP",
+  "operator_exe": "tahoma2d-mcp-operator.exe",
+  "backend_process_names": ["tahoma2d-mcp-operator", "tahoma2d-mcp-backend"],
+  "backend_port": 11013,
+  "health_path": "/api/status",
+  "diagnostics_path": "/api/v1/diagnostics",
+  "feature_smoke_path": "/api/status",
+  "window_title_re": "Tahoma2D MCP",
+  "nsis_glob": "native/target/release/bundle/nsis/Tahoma2D MCP_*_x64-setup.exe",
+  "bridge_ok_text": "running",
+  "uninstall_registry_filter": "*Tahoma2D*"
+}
