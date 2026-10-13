@@ -1,4 +1,4 @@
-"""Export tools for tahoma2d-mcp — ffmpeg-based frame-to-video."""
+"""Export tools for tahoma2d-mcp - ffmpeg-based frame-to-video."""
 
 import logging
 import shutil

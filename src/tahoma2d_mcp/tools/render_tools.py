@@ -1,4 +1,4 @@
-"""Render tools for tahoma2d-mcp — tcomposer.exe bridge."""
+"""Render tools for tahoma2d-mcp - tcomposer.exe bridge."""
 
 import logging
 import os

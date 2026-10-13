@@ -1,4 +1,4 @@
-"""Tahoma2D executor — tcomposer.exe render bridge + scene file management.
+"""Tahoma2D executor - tcomposer.exe render bridge + scene file management.
 
 Confirmed working on Tahoma2D 1.6.1:
   - tcomposer.exe renders .tnz scenes headlessly
